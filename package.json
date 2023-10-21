@@ -1,6 +1,6 @@
 {
   "name": "j-memoryhelper-functions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A library of useful classes that can handle garbage collection for the browser.",
   "module": "index.ts",
   "main": "index.ts",

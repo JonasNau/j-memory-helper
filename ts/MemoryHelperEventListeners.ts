@@ -9,26 +9,34 @@ export type MemoryHelperEventListenerOptions = {
 };
 
 export class MemoryHelperEventListeners {
-  eventListeners?: Array<MemoryHelperEventListenerOptions>;
+  eventListeners: Array<MemoryHelperEventListenerOptions>;
   constructor() {
     this.eventListeners = new Array();
   }
 
-  createMemoryHelper() {
-    this.eventListeners = undefined;
-    this.eventListeners = new Array();
-  }
-
   add(eventListenerObject: MemoryHelperEventListenerOptions): boolean {
-    if (!this.eventListeners) this.createMemoryHelper();
-    if (!this.eventListeners) return false;
     this.eventListeners.push(eventListenerObject);
     return true;
+  }
+
+  getEventListenerByName(
+    name: string
+  ): MemoryHelperEventListenerOptions | null {
+    let eventListenerWithName = this.eventListeners.find((current) => {
+      return current.name === name;
+    });
+    if (!eventListenerWithName) return null;
+    return eventListenerWithName;
   }
 
   addAndRegisterEventListener(
     eventListenerObject: MemoryHelperEventListenerOptions
   ): boolean {
+    if (eventListenerObject.name) {
+      if (!this.getEventListenerByName(eventListenerObject.name)) {
+        throw new Error("Cannot add add event listener with same name.");
+      }
+    }
     let result = this.add(eventListenerObject);
     if (!result) return false;
     eventListenerObject.ownerOfEventListener.addEventListener(
@@ -40,7 +48,7 @@ export class MemoryHelperEventListeners {
   }
 
   removeEventListenerByName(name: string) {
-    if (!this.eventListeners) return;
+    if (!this.eventListeners.length) return;
     let foundEventlisteners = this.eventListeners.filter((predicate) => {
       return predicate.name === name;
     });
@@ -52,7 +60,7 @@ export class MemoryHelperEventListeners {
   removeEventListener(
     memoryHelperEventListenerOptions: MemoryHelperEventListenerOptions
   ) {
-    if (!this.eventListeners || this.eventListeners.length) return;
+    if (!this.eventListeners.length) return;
     if (memoryHelperEventListenerOptions.options !== undefined) {
       memoryHelperEventListenerOptions.ownerOfEventListener.removeEventListener(
         memoryHelperEventListenerOptions.type,
