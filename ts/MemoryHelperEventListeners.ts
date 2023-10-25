@@ -33,7 +33,7 @@ export class MemoryHelperEventListeners {
     eventListenerObject: MemoryHelperEventListenerOptions
   ): boolean {
     if (eventListenerObject.name) {
-      if (!this.getEventListenerByName(eventListenerObject.name)) {
+      if (this.getEventListenerByName(eventListenerObject.name)) {
         throw new Error("Cannot add add event listener with same name.");
       }
     }
